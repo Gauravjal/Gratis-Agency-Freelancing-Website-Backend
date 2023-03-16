@@ -43,7 +43,7 @@ router.post('/',[
                 }]
             });
         }
-    }catch(error)
+    }catch(err)
     {
         //display error message
         console.log(err.message);
@@ -86,8 +86,9 @@ router.post('/',[
         (err,token)=>{
             if(err) throw err;
             res.json({token});
+            console.log({token});
         });
-    res.send({token});
+    //res.send({token});
     //Encrypt gravatar
     //Return jsonwebtoken
     res.send('User route');
