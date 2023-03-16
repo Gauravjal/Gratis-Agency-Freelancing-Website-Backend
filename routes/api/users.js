@@ -13,15 +13,18 @@ const User=require('../../models/User');
 //GET api/users
 //Register user
 //public route
-router.post('/',[
+router.post('/'
+,[
     //check if name field in the request.body is not empty
     check('username','Username is required').not().isEmpty(),
     //check email in the request.body is valid email
     check('email','Please include a valid email').isEmail(),
     //check if password field in request.body is at least 6 characters long
     check('password','Password should be at least 6 characters long').isLength({min:6})
-],async (req,res)=>{
+]
+,async (req,res)=>{
     //check the errors in req.body
+    console.log(req.body);
     const errors=validationResult(req);
     //Check errors are not empty
     if(!errors.isEmpty())
@@ -30,7 +33,7 @@ router.post('/',[
     });
 
     //destructing req.body 
-    const {username,email,mobile,password}=req.body;
+    const {username,email,password}=req.body;
     
     try{
         //find user if same email already exists
@@ -43,13 +46,13 @@ router.post('/',[
                 }]
             });
         }
-    }catch(err)
-    {
-        //display error message
-        console.log(err.message);
-        // set status 500 Internal server error
-        res.status(500).send('Server error');
-    }
+    // }catch(err)
+    // {
+    //     //display error message
+    //     console.log(err.message);
+    //     // set status 500 Internal server error
+    //     res.status(500).send('Server error');
+    // }
     //see if user exists
     //Get users gravatar
     const avatar=gravatar.url(email,{
@@ -66,7 +69,6 @@ router.post('/',[
     user=new User({
         username,
         email,
-        mobile,
         avatar,
         password
     });
@@ -80,20 +82,20 @@ router.post('/',[
         }
     }
 
-    jwt.sign(payload,
+    jwt.sign(
+        payload,
         config.get('jwtSecret'),
-        {expiresIn:36000},
-        (err,token)=>{
-            if(err) throw err;
-            res.json({token});
-            console.log({token});
-        });
-    //res.send({token});
-    //Encrypt gravatar
-    //Return jsonwebtoken
-    res.send('User route');
-    //Display request body
-    console.log(req.body);
-});
-//export route
-module.exports=router;
+        { expiresIn: '5 days' },
+        (err, token) => {
+          if (err) throw err;
+          res.json({ token });
+        }
+      );
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server error');
+    }
+  }
+);
+
+module.exports = router;

@@ -23,7 +23,7 @@ router.get('/me',auth,async(req,res)=>{
         console.error(err.message);
         res.status(500).send('Server Error');
     }
-    res.send('Profile route');
+    // res.send('Profile route');
 })
 
 //POST 
@@ -80,7 +80,6 @@ router.post(
         if(facebook) profileFields.social.facebook=facebook;
         if(linkedin) profileFields.social.linkedin=linkedin;
         if(instagram) profileFields.social.instagram=instagram;
-        res.send('Hello');
 
         try{
             let profile=await Profile.findOne({user:req.user.id});
@@ -100,6 +99,7 @@ router.post(
                 return res.json(profile);
             }
             //Create a new profile if not found
+            console.log(profileFields)
             profile=new Profile(profileFields);
             await profile.save();
             res.json(profile);
@@ -107,7 +107,7 @@ router.post(
         catch(err)
         {
             console.error(err.message);
-            res.status(500).send('Server Error');
+            res.status(500);//.send('Server Error');
         }
     }
 )
@@ -193,7 +193,7 @@ router.put('/experience',[auth,[
 ]],async(req,res)=>{
     try{
         const errors=validationResult(req);
-        if(!errros.isEmpty())
+        if(!errors.isEmpty())
         {
             return res.status(400).json({errors:errors.array()});
         }
@@ -229,10 +229,11 @@ router.put('/experience',[auth,[
         }
     }
     catch(err){
-        if(error.kind=='ObjectId')
+        if(err.kind=='ObjectId')
         return res.status(400).json({
             msg:'User not found'
         });
+    
         console.error(err.message);
         res.status(500).send('Server Error');
     }
@@ -272,7 +273,8 @@ router.put('/education',[auth,[
 ]],async(req,res)=>{
     try{
         const errors=validationResult(req);
-        if(!errros.isEmpty())
+        console.log("check",errors);
+        if(!errors.isEmpty())
         {
             return res.status(400).json({errors:errors.array()});
         }
@@ -308,7 +310,7 @@ router.put('/education',[auth,[
         }
     }
     catch(err){
-        if(error.kind=='ObjectId')
+        if(err.kind=='ObjectId')
         return res.status(400).json({
             msg:'User not found'
         });

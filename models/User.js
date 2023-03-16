@@ -15,13 +15,6 @@ const UserSchema=new mongoose.Schema({
         //Email should be unique
         unique:true
     },
-     //user mobile
-     mobile:{
-        type:String,
-        required:true,
-        //Mobile should be unique
-        unique:true
-    },
     //user password
     password:{
         type:String,
